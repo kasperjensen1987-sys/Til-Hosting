@@ -6,10 +6,9 @@ from functools import wraps
 from services.members_service import (
     MembersService,
     cpr_display,
-    cpr_display_compact,
+    cpr_display_compact, # kompakt CPR ddmmyy-xxxx
     age_from_full_cpr,
 )
-# Vi antager disse services findes i din projektstruktur
 from services.auth_service import AuthService
 from services.analytics_service import AnalyticsService
 
@@ -23,14 +22,11 @@ def login_required(view_func):
 
 def create_app():
     app = Flask(__name__)
-    # Sikkerhed: Render bruger miljøvariabler. 'dev-secret' er fallback.
-    app.config['SECRET_KEY'] = os.environ.get('APP_SECRET_KEY', 'dev-change-me-12345')
-    
-    # Database sti tilpasset Render/Lokal struktur
+    app.config['SECRET_KEY'] = os.environ.get('APP_SECRET_KEY', 'dev-change-me')
     app.config['DATABASE'] = os.path.join(app.root_path, 'storage', 'tfc_members.db')
     os.makedirs(os.path.join(app.root_path, 'storage'), exist_ok=True)
 
-    # Hjælpere til Jinja (bruges i templates)
+    # hjælpere til Jinja (bruges i templates)
     app.jinja_env.globals['cpr_display'] = cpr_display
     app.jinja_env.globals['cpr_display_compact'] = cpr_display_compact
     app.jinja_env.globals['age_from_full_cpr'] = age_from_full_cpr
@@ -41,38 +37,33 @@ members_service = MembersService(app.config['DATABASE'])
 auth_service = AuthService(app.config['DATABASE'])
 analytics_service = AnalyticsService(app.config['DATABASE'])
 
-# --- NY ROUTE: INTERAKTIVT CV (FORSIDE) ---
+# --- NY ROUTE: FORSIDE / INTERAKTIVT CV ---
 @app.route('/')
 def index():
-    """
-    Denne rute fungerer som din professionelle landing page.
-    Data er udtrukket fra dine profilanalyser (FirstMind/DISC) og dit CV.
-    """
     profile = {
-        "name": "Kasper Groth Jensen",
-        "title": "Digital Specialist & Procesoptimering",
-        "tagline": "Strategisk brobygger mellem IT, bygbarhed og mennesker",
-        "intro": "Med et 12-tal i Videregående Programmering og 20 års erfaring transformerer jeg komplekse forretningsbehov til digitale løsninger.",
-        "talents": ["Udviklende", "Målrettet", "Problemløser", "Disciplineret", "Positiv"],
-        "disc": "Kompetence & Stabilitet (C/S profil)",
-        "linkedin": "https://www.linkedin.com/in/kaspergrothjensen",
-        "thingiverse": "https://www.thingiverse.com/" # Indsæt dit link her
+        'name': 'Kasper Groth Jensen',
+        'title': 'Digital Specialist & Procesoptimering',
+        'tagline': 'Strategisk brobygger mellem IT, bygbarhed og mennesker',
+        'intro': 'Med et 12-tal i Videregående Programmering og 20 års erfaring som teknisk bindeled, specialiserer jeg mig i at transformere komplekse forretningsbehov til automatiserede løsninger.',
+        'talents': ['Udviklende', 'Målrettet', 'Problemløser', 'Disciplineret', 'Positiv'],
+        'disc': 'Kompetence & Stabilitet (C/S profil)',
+        'linkedin': 'https://www.linkedin.com/in/kaspergrothjensen',
+        'thingiverse': 'https://www.thingiverse.com/KgrothJensen/designs'
     }
     
-    # Showcase sektion med kode-eksempel fra dit projekt
     showcase = [
         {
-            "title": "Eksamensprojekt: Medlemssystem",
-            "grade": "12",
-            "tech": "Python, Flask, SQLite, Pandas",
-            "description": "Et komplet system med Three-Tier Architecture, CRUD-operationer og statistisk dataanalyse.",
-            "code_sample": "class MembersService:\n    def list_members(self, status='active'):\n        query = 'SELECT * FROM members WHERE status = ?'\n        return self.db.execute(query, [status])"
+            'title': 'Eksamensprojekt: Medlemssystem',
+            'grade': '12',
+            'tech': 'Python, Flask, SQLite, Pandas',
+            'description': 'Systemet er udviklet med Three-Tier Architecture (Service-, Database- og Model-lag), hvilket sikrer høj vedligeholdelsesgrad og klar separation af logik.',
+            'code_sample': 'class MembersService:\n    # CRUD-operation med separation af concerns\n    def list_members(self, status=\'active\'):\n        query = \'SELECT * FROM members WHERE status = ?\'\n        return self.db.execute(query, [status])'
         }
     ]
     
     return render_template('cv.html', profile=profile, showcase=showcase)
 
-# --- EKSISTERENDE ROUTES (MEDLEMS-SYSTEM) ---
+# --- DINE EKSISTERENDE ROUTES TIL MEDLEMSSYSTEMET ---
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -97,6 +88,7 @@ def logout():
 def dashboard():
     total_active = members_service.count_by_status('active')
     total_inactive = members_service.count_by_status('inactive')
+    # URLs til grafer med cache-bust i template
     chart_urls = {
         'membership': url_for('analytics_chart', chart='membership'),
         'age_buckets': url_for('analytics_chart', chart='age_buckets'),
@@ -115,7 +107,11 @@ def dashboard():
 def members_list():
     status = request.args.get('status', 'active')
     rows = members_service.list_members(status)
-    return render_template('members_list.html', members=rows, status=status)
+    return render_template(
+        'members_list.html',
+        members=rows,
+        status=status,
+    )
 
 @app.route('/members/<int:member_id>')
 @login_required
@@ -173,7 +169,11 @@ def filter_age():
     max_age = request.args.get('max', type=int)
     rows = members_service.filter_age(group=group, min_age=min_age, max_age=max_age)
     status = 'under18' if group == 'under18' else 'filtered'
-    return render_template('members_list.html', members=rows, status=status)
+    return render_template(
+        'members_list.html',
+        members=rows,
+        status=status,
+    )
 
 @app.route('/renewals-overview')
 @login_required
@@ -227,6 +227,7 @@ def members_terminate(member_id):
     today = date.today().strftime('%d-%m-%Y')
     return render_template('members_terminate.html', member=m, today=today)
 
+# besked om permanent sletning
 @app.route('/members/<int:member_id>/delete', methods=['POST'])
 @login_required
 def members_delete(member_id: int):
@@ -237,17 +238,21 @@ def members_delete(member_id: int):
         flash('Medlem ikke fundet.', 'error')
     return redirect(url_for('members_list', status='inactive'))
 
+# Endpoints til grafer
 @app.route('/analytics/<chart>.png')
 @login_required
 def analytics_chart(chart: str):
+    '''
+    Server PNG-graf ingen caching så den altid følger databasen
+    '''
     buf = analytics_service.render(chart)
-    resp = make_response(send_file(buf, mimetype="image/png"))
-    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    resp.headers["Pragma"] = "no-cache"
-    resp.headers["Expires"] = "0"
+    resp = make_response(send_file(buf, mimetype='image/png'))
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
     return resp
 
-if __name__ == "__main__":
-    # Vigtigt for Render: Host skal være 0.0.0.0
-    port = int(os.environ.get("PORT", 5000))
+if __name__ == '__main__':
+    # Render bruger port 5000 som standard, men host skal være 0.0.0.0
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
