@@ -242,9 +242,9 @@ def members_delete(member_id: int):
 @app.route('/analytics/<chart>.png')
 @login_required
 def analytics_chart(chart: str):
-    '''
+    """
     Server PNG-graf ingen caching så den altid følger databasen
-    '''
+    """
     buf = analytics_service.render(chart)
     resp = make_response(send_file(buf, mimetype='image/png'))
     resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'

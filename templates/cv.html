@@ -12,7 +12,7 @@
             --primary-color: #2c3e50; /* Mørk farve til overskrifter */
             --sidebar-bg: #f8f9fa;    /* Baggrundsfarve til venstre kolonne */
             --text-color: #333333;
-            --accent-color: #0056b3;  /* Farve til links og knapper */
+            --accent-color: #00897B;  /* Farve til links og knapper */
         }
 
         body {
@@ -45,12 +45,15 @@
         }
 
         .profile-img {
-            width: 180px;
-            height: 180px;
+            width: 150px; /* Fast definition af størrelse */
+            height: 150px;
+            max-width: 100%;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto;
         }
 
         .sidebar-section {
@@ -190,7 +193,7 @@
     <div class="sidebar">
         
         <div class="profile-img-container">
-            <img src='{{ url_for('static', filename='Pictures/Kasper_profil.png') }}' alt='Kasper Groth Jensen' class='Profil_billede'>
+            <img src='{{ url_for('static', filename='Pictures/Kasper_profil.png') }}' alt='Kasper Groth Jensen' class='profile-img'>
         </div>
 
         <div class="sidebar-section">
