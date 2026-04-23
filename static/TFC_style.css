@@ -1,0 +1,346 @@
+/* ================================
+   Troopers for Charity – TFC_style.css
+   Farver: lys grå baggrund, mørk grå footer/cards
+=================================== */
+
+:root{
+  --bg-dark:#2e2e2e;     /* footer / modal baggrund */
+  --bg-light:#4a4a4a;    /* side-baggrund */
+  --card:#3a3a3a;        /* paneler/kort */
+  --accent:#ffffff;      /* knapper / links */
+  --muted:#bfbfbf;       /* sekundær tekst */
+  --text:#f5f5f5;        /* primær tekst */
+}
+
+/* Globalt */
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0;
+  color:var(--text);
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  background:var(--bg-light);
+}
+a{ color:var(--accent); text-decoration:none }
+
+/* Layout */
+.page{ min-height:100%; position:relative; padding-bottom:120px }
+.container{ max-width:1100px; margin:0 auto; padding:24px 24px 0 24px }
+
+/* Header */
+header{
+  display:flex; gap:16px; align-items:center; justify-content:center; margin-bottom:12px
+}
+header .logo {
+  width: 140px !important;     /* styr logoets bredde */
+  height: auto !important;     /* bevar proportioner */
+  max-width: none !important;
+  background: transparent !important;
+  border: none !important;
+  object-fit: contain;
+  display: block;
+}
+h1{ margin:0 }
+header h1{ font-size:2.6rem !important; line-height:1.15 }
+header .subtitle{ font-size:1rem !important; color:var(--muted); text-align:center }
+
+/* Navigation */
+nav{
+  display:flex; gap:16px; justify-content:center; margin:8px 0 16px
+}
+nav a{
+  padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+  background:#2f2f2f;
+}
+nav a, nav .btn{ color:#fff !important; font-weight:700 !important }
+
+/* Cards */
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 8px 18px rgba(0,0,0,0.35);
+}
+.card.login{ max-width:480px; margin:60px auto }
+
+/* Typografi-helpers */
+.muted{ color:var(--muted) }
+.big{ font-size:36px; font-weight:800 }
+
+/* Grid / rækker */
+.grid{ display:grid; gap:16px }
+.grid.cols-2{ grid-template-columns:repeat(2,1fr) }
+.row{ display:flex; gap:8px; align-items:center }
+.row.between{ justify-content:space-between }
+.wrap{ display:flex; gap:8px; flex-wrap:wrap }
+
+/* Tabel – generelt */
+.table{
+  width:100% !important;
+  border-collapse:separate;
+  border-spacing:0 8px;
+  table-layout:auto !important;   /* auto-fit kolonner */
+}
+.table th{
+  font-weight:600; color:var(--muted);
+  text-align:left; padding:8px 10px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.table td{
+  background:#2f2f2f;
+  border:1px solid rgba(255,255,255,.06);
+  padding:10px;
+  border-left:none; border-right:none;
+  vertical-align:middle !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+.table tr td:first-child{
+  border-radius:10px 0 0 10px;
+  border-left:1px solid rgba(255,255,255,.06)
+}
+.table tr td:last-child{
+  border-radius:0 10px 10px 0;
+  border-right:1px solid rgba(255,255,255,.06);
+  display:table-cell !important;
+}
+.table td.actions{ white-space:nowrap !important; text-align:center !important }
+.table td.actions .btn{ display:inline-block; margin-right:6px; white-space:nowrap !important }
+.table th.actions{ text-align:center !important }
+
+/* Knapper */
+.btn{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:12px;
+  background:#2f2f2f;
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--text);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.btn.small{ padding:6px 10px; border-radius:10px; font-size:13px }
+.btn.primary, .btn.warning, button.primary, .tag.warning, .badge.warning, .highlight{
+  background:#ffffff !important;
+  color:#000 !important;
+  border-color:#ddd !important;
+}
+
+/* Formularer */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(280px,1fr));
+  gap:12px 16px;
+}
+.field{ display:flex; flex-direction:column; gap:6px }
+label{ font-size:14px; color:var(--muted) }
+input,select,textarea{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.2);
+  background:#242424;
+  color:var(--text);
+  max-width:100%;
+}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid #ffffff !important;
+  box-shadow:0 0 0 3px rgba(255,255,255,0.25) !important;
+  border-color:#ffffff !important;
+}
+textarea{ resize:vertical; max-height:60vh }
+.actions{ margin-top:12px }
+
+/* Flash beskeder */
+.flash{ padding:10px 12px; border-radius:10px; margin:10px 0; text-align:center }
+.flash.error{ background:#7f1d1d; color:#fff }
+.flash.success{ background:#064e3b; color:#fff }
+
+/* Brødkrummer + badge */
+.breadcrumbs{
+  display:flex; align-items:center; gap:8px;
+  justify-content:flex-start; margin:6px 0 12px;
+  color:var(--muted); font-size:14px
+}
+.breadcrumbs a{ color:var(--accent) }
+.badge{
+  display:inline-block; padding:6px 10px; border-radius:999px;
+  background:#2f2f2f; border:1px solid rgba(255,255,255,.2);
+  color:var(--text); font-size:13px
+}
+.badge.filter {
+  background:#1e3a8a; color:#fff; font-size:0.8rem; font-weight:600;
+  padding:4px 8px; border-radius:999px; margin-left:8px; vertical-align:middle;
+}
+
+/* Hjælpeklasse */
+.nowrap{ white-space:nowrap }
+
+/* Footer */
+.footer{
+  position:fixed; left:0; right:0; bottom:0;
+  background:var(--bg-dark);
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; padding:10px 12px;
+  color:var(--muted); font-size:14px; text-align:center
+}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.6);
+  display:none; align-items:center; justify-content:center; z-index:50
+}
+.modal{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  padding:16px; max-width:560px; width:92%
+}
+.modal .form-grid{ grid-template-columns:1fr }
+
+/* Responsiv */
+@media (max-width:720px){
+  .form-grid{ grid-template-columns:1fr }
+  .grid.cols-2{ grid-template-columns:1fr }
+  nav{ flex-wrap:wrap }
+}
+
+/* Markering & autofill tweaks */
+::selection{ background:#fff !important; color:#000 !important }
+::-moz-selection{ background:#fff !important; color:#000 !important }
+input::selection, textarea::selection{ background:#fff !important; color:#000 !important }
+input, textarea, select{ caret-color:#000 }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill{
+  -webkit-text-fill-color:#000 !important;
+  -webkit-box-shadow:inset 0 0 0 1000px #ffffff !important;
+  box-shadow:inset 0 0 0 1000px #ffffff !important;
+  transition:background-color 5000s ease-in-out 0s !important;
+}
+mark{ background:#fff; color:#000 }
+
+/* === GLOBAL: center all cards (bevarer eksisterende layout) === */
+.container{ display:flex; flex-direction:column; align-items:center }
+.card{ display:inline-block; width:auto; max-width:100%; margin:0 auto 20px auto; text-align:left }
+.table-wrapper{ display:inline-block; width:auto; max-width:100%; overflow:visible }
+
+/* === PAGE-SPECIFIC RULES === */
+
+/* Renewals: fyld containeren + én linje pr. række */
+.card.renewals{
+  display:block !important;
+  width:100% !important;
+  max-width:1100px;
+  margin:0 auto 20px auto !important;
+}
+.card.renewals > .card{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 0 12px 0 !important;
+}
+.card.renewals .table-wrapper{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:visible !important;
+}
+.card.renewals .table{
+  width:100% !important;
+  table-layout:auto !important;
+}
+.table.nowrap th,.table.nowrap td{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  vertical-align:middle !important;
+}
+
+/* Detail page readability */
+.card h3{ font-size:1.1rem }
+.card .row.between{ padding:6px 0; border-bottom:1px solid rgba(255,255,255,.08) }
+.card .row.between:last-child{ border-bottom:none }
+
+/* ================================
+   PRINT
+================================ */
+@media print {
+  header, nav, .footer, .flash, .btn, .badge, .breadcrumbs, .modal-backdrop{ display:none !important }
+  html, body, .page, .container{ background:#fff !important; color:#000 !important }
+  .card, .card.renewals, .table-wrapper{
+    background:#fff !important; border:none !important; box-shadow:none !important;
+    margin:0 !important; padding:0 !important; width:100% !important; max-width:none !important; overflow:visible !important
+  }
+  table,.table{
+    width:100% !important; table-layout:auto !important; border-collapse:collapse !important; font-size:11pt !important
+  }
+  .table thead th{
+    color:#000 !important; background:#fff !important; border-bottom:2px solid #000 !important;
+    text-align:left !important; padding:6px 8px !important; white-space:normal !important
+  }
+  .table td,.table th{
+    color:#000 !important; background:#fff !important; border-bottom:1px solid #000 !important;
+    padding:6px 8px !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; vertical-align:top !important
+  }
+  thead{ display:table-header-group !important }
+  tfoot{ display:table-footer-group !important }
+  tr{ page-break-inside:avoid !important }
+  .table *,table *{ background:transparent !important; color:#000 !important }
+}
+
+/* === DASHBOARD: Statistik-kort === */
+.stats-row {
+  display: flex;
+  justify-content: center; /* centrer begge kort */
+  gap: 20px;               /* afstand mellem kortene */
+  flex-wrap: wrap;
+}
+.stats-card {
+  min-width: 260px;
+  max-width: 320px;
+  text-align: center;
+}
+
+/* === DASHBOARD: Grafer === */
+.charts-container {
+  display: inline-block;                 /* bredden følger indholdet */
+  padding: 8px 10px;                     /* mindre indre luft i siderne */
+  margin: 0 auto 20px auto;              /* centrer kortet */
+  width: auto;                           /* ingen tvungen fuldbredde */
+  max-width: min(95vw, 980px);           /* vær ikke bredere end viewport/980px */
+  text-align: center;
+}
+.charts-title {
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+.charts-tabs {
+  display: flex;
+  justify-content: center;               /* centrer faneknapperne */
+  gap: 8px;
+  margin-bottom: 12px;                   /* lidt luft mellem knapper og graf */
+}
+.charts-wrapper {
+  display: inline-block;                 /* wrapperen følger billedets bredde */
+  width: auto;
+  max-width: none;
+  text-align: center;
+}
+.chart-canvas {
+  display: block;
+  width: 100%;                           /* fyld wrapperens bredde */
+  max-width: 900px;                      /* men aldrig større end 900px */
+  height: auto;
+  max-height: 70vh;
+  margin: 0 auto;                        /* centrér billedet */
+  border-radius: 10px;
+}
+/* Gør pie-diagrammet mindre end de andre */
+.chart-canvas.pie {
+  max-width: 600px;
+}

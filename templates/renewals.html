@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <span>Børneattest  Fornyelser</span>
+</div>
+
+<div class="card renewals">
+  <div class="row between wrap" style="margin-bottom:16px">
+    <h2 style="margin:0">Børneattest Fornyelser – {{ base_year }}</h2>
+  </div>
+
+  <!-- Indeværende år -->
+  <div class="card" style="padding:14px; margin-bottom:12px">
+    <div class="row between wrap" style="margin-bottom:8px">
+      <h3 style="margin:0">Indeværende år ({{ base_year }})</h3>
+      <div class="wrap">
+        <a class="btn small" href="{{ url_for('renewals_print', year=base_year) }}" target="_blank">
+          Print {{ base_year }}
+        </a>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table class="table nowrap">
+        <thead>
+          <tr>
+            <th>Navn</th>
+            <th>CPR</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Indmeldt d.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in renewals_this %}
+          <tr>
+            <td>{{ r['full_name'] }}</td>
+            <td>{{ cpr_display_compact(r.get('full_cpr_encrypted'), True) }}</td>
+            <td>{{ r['email'] or '-' }}</td>
+            <td>{{ r['phone'] or '-' }}</td>
+            <td>{{ r['join_date'] or '-' }}</td>
+            <td>{{ 'Aktiv' if r['status']=='active' else 'Ikke-medlem' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Næstkommende år -->
+  <div class="card" style="padding:14px">
+    <div class="row between wrap" style="margin-bottom:8px">
+      <h3 style="margin:0">Næstkommende år ({{ base_year + 1 }})</h3>
+      <div class="wrap">
+        <a class="btn small" href="{{ url_for('renewals_print', year=base_year + 1) }}" target="_blank">
+          Print {{ base_year + 1 }}
+        </a>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table class="table nowrap">
+        <thead>
+          <tr>
+            <th>Navn</th>
+            <th>CPR</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Indmeldt d.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in renewals_next %}
+          <tr>
+            <td>{{ r['full_name'] }}</td>
+            <td>{{ cpr_display_compact(r.get('full_cpr_encrypted'), True) }}</td>
+            <td>{{ r['email'] or '-' }}</td>
+            <td>{{ r['phone'] or '-' }}</td>
+            <td>{{ r['join_date'] or '-' }}</td>
+            <td>{{ 'Aktiv' if r['status']=='active' else 'Ikke-medlem' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

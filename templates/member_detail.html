@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> >
+  <a href="{{ url_for('members_list', status='active') }}">Medlemmer</a> >
+  <span>Detaljer</span>
+</div>
+<div class="card" style="padding:18px">
+  <div class="row between wrap" style="margin-bottom:16px">
+    <h2 style="margin:0">Medlem - {{ member['full_name'] }}</h2>
+    <div class="wrap">
+      <a class="btn small" href="{{ url_for('members_edit', member_id=member['id']) }}">Redigér</a>
+      {% if member['status'] == 'active' %}
+        <a class="btn small" href="{{ url_for('members_terminate', member_id=member['id']) }}">Udmeld</a>
+      {% else %}
+        <a class="btn small" href="{{ url_for('members_toggle', member_id=member['id']) }}">Genaktiver</a>
+      {% endif %}
+      <a class="btn small" href="{{ url_for('members_list', status='active') }}">Tilbage til liste</a>
+    </div>
+  </div>
+
+  <!-- Personlige oplysninger -->
+  <h3 style="margin:0 0 10px 0; text-align:center;">Personlige oplysninger</h3>
+  <div class="row between"><strong>Navn</strong><span>{{ member['full_name'] }}</span></div>
+  <div class="row between"><strong>Køn</strong><span>{{ member['gender'] or 'Ej angivet' }}</span></div>
+  <div class="row between"><strong>Født/CPR</strong><span>{{ cpr_display_compact(member.get('full_cpr_encrypted')) }}</span></div>
+  <div class="row between"><strong>Alder</strong><span>{{ age_from_full_cpr(member.get('full_cpr_encrypted')) or '-' }}</span></div>
+  <div class="row between" style="margin-bottom:12px"><strong>Indmeldelsesdato</strong><span>{{ member['join_date'] or '-' }}</span></div>
+
+  <!-- Kontakt -->
+  <h3 style="margin:0 0 10px 0; text-align:center;">Kontakt</h3>
+  <div class="row between"><strong>Email</strong><span>{{ member['email'] or '-' }}</span></div>
+  <div class="row between"><strong>Telefon</strong><span>{{ member['phone'] or '-' }}</span></div>
+  <div class="row between" style="margin-bottom:12px"><strong>Adresse</strong><span>{{ member['address'] or '-' }}</span></div>
+
+  <!-- Medlemskab -->
+  <h3 style="margin:0 0 10px 0; text-align:center;">Medlemskab</h3>
+  <div class="row between"><strong>Status</strong><span>{{ 'Aktiv' if member['status']=='active' else 'Ikke-medlem' }}</span></div>
+  <div class="row between"><strong>Børneattest</strong><span>{{ member['child_check_status'] or '-' }}</span></div>
+  <div class="row between"><strong>Bemærkning (attest)</strong><span>{{ member['child_check_note'] or '-' }}</span></div>
+  <div class="row between"><strong>Attest godkendt</strong><span>{{ member['child_check_approved'] or '-' }}</span></div>
+  <div class="row between" style="margin-bottom:12px"><strong>Næste fornyelse</strong><span>{{ member['child_check_renewal'] or '-' }}</span></div>
+
+  {% if member['digital_post_exempt'] %}
+    <h3 style="margin:0 0 10px 0; text-align:center;">Digital post</h3>
+    <div class="row between"><strong>Fritaget</strong><span>Ja</span></div>
+    <div class="row between" style="margin-bottom:12px"><strong>Note</strong><span>{{ member['digital_post_note'] or '-' }}</span></div>
+  {% endif %}
+
+  <!-- Udmeldelse (kun hvis inaktiv) -->
+  {% if member['status'] != 'active' %}
+    <h3 style="margin:0 0 10px 0; text-align:center;">Udmeldelse</h3>
+    <div class="row between"><strong>Dato</strong><span>{{ member['leave_date'] or '-' }}</span></div>
+    <div class="row between"><strong>Årsag</strong><span>{{ member['leave_reason'] or '-' }}</span></div>
+  {% endif %}
+</div>
+{% endblock %}

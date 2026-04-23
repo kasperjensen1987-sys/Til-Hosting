@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <span>Medlemmer</span>
+</div>
+
+<div class="members-page-wrapper">
+  <div class="card members stretch centered">
+    <div class="row between wrap" style="margin-bottom:12px">
+      <!-- Venstre: overskrift -->
+      <h2 style="margin:0">
+        Medlemmer –
+        {% if status == 'active' %}Aktive
+        {% elif status == 'inactive' %}Udmeldte
+        {% elif status == 'all' %}Alle
+        {% else %}Filtreret{% endif %}
+        {% if status == 'filtered' %}
+          <span class="badge filter">Under 18 år</span>
+        {% endif %}
+      </h2>
+
+      <!-- Højre: knapper -->
+      <div class="wrap">
+        <a class="btn small" href="{{ url_for('members_new') }}">Opret medlem</a>
+
+        <a class="btn small {{ 'active' if status=='active' else '' }}"
+           href="{{ url_for('members_list', status='active') }}">Aktive</a>
+        <a class="btn small {{ 'active' if status=='inactive' else '' }}"
+           href="{{ url_for('members_list', status='inactive') }}">Udmeldte</a>
+        <a class="btn small {{ 'active' if status=='filtered' else '' }}"
+           href="{{ url_for('filter_age', max=17) }}">Under 18</a>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Navn</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Køn</th>
+            <th>Indmeldt d.</th>
+            <th>Børneattest status</th>
+            <th>Medlemsstatus</th>
+            <th class="actions">Handlinger</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in members %}
+          <tr>
+            <td>{{ m['full_name'] }}</td>
+            <td>{{ m['email'] or '-' }}</td>
+            <td>{{ m['phone'] or '-' }}</td>
+            <td>{{ m['gender'] }}</td>
+            <td>{{ m['join_date'] or '-' }}</td>
+            <td>{{ m['child_check_status'] or '-' }}</td>
+            <td>{{ 'Aktiv' if m['status']=='active' else 'Ikke-medlem' }}</td>
+            <td class="actions">
+              <a class="btn small" href="{{ url_for('members_view', member_id=m['id']) }}">Se mere</a>
+
+              {% if m['status'] == 'active' %}
+                <!-- Aktive: Redigér + Udmeld -->
+                <a class="btn small" href="{{ url_for('members_edit', member_id=m['id']) }}">Redigér</a>
+                <a class="btn small" href="{{ url_for('members_terminate', member_id=m['id']) }}">Udmeld</a>
+              {% else %}
+                <!-- Udmeldte: Slet (POST + confirm) + Genaktiver -->
+                {% set confirm_msg = 'Du sletter nu alt data om medlemmet \"' ~ (m['full_name'] or '') ~ '\". Er du sikker?' %}
+                <form method="post"
+                      action="{{ url_for('members_delete', member_id=m['id']) }}"
+                      style="display:inline"
+                      data-confirm="{{ confirm_msg }}">
+                  <button type="submit" class="btn small error">Slet</button>
+                </form>
+                <a class="btn small" href="{{ url_for('members_toggle', member_id=m['id']) }}">Genaktiver</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Lille, generisk confirm-handler (ingen inline-JS i attributter) -->
+<script>
+  (function () {
+    var forms = document.querySelectorAll('form[data-confirm]');
+    for (var i = 0; i < forms.length; i++) {
+      forms[i].addEventListener('submit', function (e) {
+        var msg = this.getAttribute('data-confirm') || 'Er du sikker?';
+        if (!window.confirm(msg)) {
+          e.preventDefault();
+        }
+      });
+    }
+  })();
+</script>
+{% endblock %}

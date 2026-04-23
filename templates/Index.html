@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class='card login'><h2>Log ind</h2>
+  <form method='post' action='{{ url_for('login') }}'>
+    <div class='row'>
+      <div class='field'><label>Brugernavn</label><input name='username' placeholder='Brugernavn' required></div>
+      <div class='field'><label>Kodeord</label><input name='password' type='password' placeholder='Kodeord' required></div>
+    </div>
+    <div class='actions'><button class='btn primary'>Log ind</button></div>
+  </form>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}<div class='flash {{ category }}' style='max-width:480px;margin:10px auto 0 auto'>{{ message }}</div>{% endfor %}{% endif %}
+{% endwith %}
+{% endblock %}

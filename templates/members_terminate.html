@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <a href="{{ url_for('members_list', status='active') }}">Medlemmer</a> ›
+  <span>Udmeld medlem</span>
+</div>
+
+<div class='card'>
+  <h2>Udmeld medlem</h2>
+
+  <p>
+    Du er ved at udmelde
+    <strong>{{ member.get('full_name') }}</strong>.
+  </p>
+  <p class="muted">
+    Indmeldt: <strong>{{ member.get('join_date') or '-' }}</strong>
+  </p>
+
+  <div class="flash error" style="text-align:left">
+    <strong>Vigtigt:</strong> Ved udmeldelse slettes alle øvrige oplysninger
+    (CPR, kontaktinfo, adresser, noter, børneattestfelter, m.m.) fra databasen.
+    Der bevares kun navn, indmeldelsesdato, udmeldelsesdato og udmeldelsesgrund
+    – samt status sættes til “ikke-medlem”.
+  </div>
+
+  <form method="post" class='form-grid' autocomplete="off">
+    <div class='field'>
+      <label>Udmeldelsesdato *</label>
+      <input name="leave_date" value="{{ today }}" placeholder="dd-mm-yyyy" required
+             pattern="^\d{2}-\d{2}-\d{4}$" title="Brug format dd-mm-yyyy">
+    </div>
+
+    <div class='field' style='grid-column:1/-1'>
+      <label>Årsag til udmelding *</label>
+      <textarea name="leave_reason" rows="4" placeholder="Angiv årsag..." required></textarea>
+    </div>
+
+    <div class='actions'>
+      <button class='btn error' type="submit">Bekræft udmeldelse</button>
+      <a class='btn' href='{{ url_for("members_list", status="active") }}'>Annullér</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

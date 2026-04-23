@@ -1,0 +1,205 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <a href="{{ url_for('members_list', status='active') }}">Medlemmer</a> ›
+  <span>Opret medlem</span>
+</div>
+
+<div class='card' style="max-width:1000px;margin:0 auto">
+  <h2>Opret medlem</h2>
+
+  <form method='post' autocomplete="off">
+    <div class='form-grid'>
+
+      <!-- Personlige oplysninger -->
+      <div class='field'>
+        <label>Fulde Navn *</label>
+        <input name='full_name' autocomplete="name" required>
+      </div>
+
+      <div class='field'>
+        <label>Køn</label>
+        <select name='gender'>
+          <option value="Ej angivet" selected>Ej angivet</option>
+          <option value="Mand">Mand</option>
+          <option value="Kvinde">Kvinde</option>
+          <option value="Andet">Andet</option>
+        </select>
+      </div>
+
+      <div class='field' style="grid-column:1/-1">
+        <label>Fulde CPR nummer *</label>
+        <input id="full_cpr"
+               name="full_cpr"
+               placeholder="dd-mm-yyyy-xxxx"
+               inputmode="numeric"
+               pattern="^\d{2}-\d{2}-\d{4}-\d{4}$"
+               title="Indtast CPR som dd-mm-yyyy-xxxx (fx 08-08-1970-1234)"
+               autocomplete="off"
+               required>
+        <div class="muted" style="font-size:12px">
+          Format: dd-mm-yyyy-xxxx (sidste 4 gemmes krypteret). Bruges også til aldersberegning.
+        </div>
+      </div>
+
+      <!-- Kontakt -->
+      <div class='field'>
+        <label>E-mail *</label>
+        <input name='email' type='email' autocomplete="email" maxlength="254" required>
+      </div>
+
+      <div class='field'>
+        <label>Telefon</label>
+        <input name='phone'
+               inputmode="numeric"
+               pattern="^[0-9]{8}$"
+               title="Indtast 8 cifre (fx 12345678)"
+               autocomplete="tel">
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Adresse</label>
+        <input name='address' autocomplete="street-address">
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Facebook</label>
+        <input name='facebook'
+               inputmode="url"
+               pattern="^https?:\/\/(www\.)?facebook\.com\/.+$"
+               title="Indsæt et gyldigt Facebook-link (fx https://www.facebook.com/brugernavn)"
+               placeholder="https://www.facebook.com/brugernavn"
+               autocomplete="url">
+      </div>
+
+      <!-- Digital Post -->
+      <div class='field'>
+        <label>
+          <input type='checkbox' id="digital_post_exempt" name='digital_post_exempt'>
+          Fritaget for Digital Post
+        </label>
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Digital Post – note</label>
+        <textarea id="digital_post_note" name='digital_post_note' rows='3' placeholder='Udfyldes kun hvis fritaget' maxlength="2000"></textarea>
+      </div>
+
+      <!-- Medlemskab -->
+      <div class='field'>
+        <label>Dato for optagelse *</label>
+        <input name='join_date'
+               placeholder='dd-mm-yyyy'
+               pattern="^\d{2}-\d{2}-\d{4}$"
+               title="Brug format dd-mm-yyyy (fx 05-02-2024)"
+               autocomplete="off"
+               required>
+      </div>
+
+      <div class='field'>
+        <label>Status</label>
+        <select name="status">
+          <option value="active" selected>Aktiv</option>
+          <option value="inactive">Ikke-medlem</option>
+        </select>
+      </div>
+
+      <!-- Børneattest -->
+      <div class='field'>
+        <label>Børneattest godkendt</label>
+        <input name='child_check_approved'
+               placeholder='dd-mm-yyyy'
+               pattern="^\d{2}-\d{2}-\d{4}$"
+               title="Brug format dd-mm-yyyy (fx 12-02-2024)"
+               autocomplete="off">
+        <div class="muted" style="font-size:12px">
+          Fornyelsesdato beregnes automatisk til +2 år ved gem.
+        </div>
+      </div>
+
+      <div class='field'>
+        <label>Børneattest status</label>
+        <select id="child_check_status" name='child_check_status'>
+          <option value='Ikke indhentet' selected>Ikke indhentet</option>
+          <option value='Klar til bestilling'>Klar til bestilling</option>
+          <option value='Er bestilt'>Er bestilt</option>
+          <option value='Attest indhentet'>Attest indhentet</option>
+          <option value='Undtaget'>Undtaget</option>
+        </select>
+        <div class="muted" style="font-size:12px">
+          Hvis medlemmet er under 18, låses status til “Undtaget”.
+        </div>
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Note til børneattest</label>
+        <textarea name='child_check_note' rows='3' maxlength="2000"></textarea>
+      </div>
+
+    </div>
+
+    <div class='actions' style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class='btn primary'>Gem</button>
+      <a class='btn' href='{{ url_for('members_list', status="active") }}'>Annullér</a>
+    </div>
+  </form>
+</div>
+
+<script>
+(function(){
+  // 1) Lås børneattest til "Undtaget" ved alder < 18 (parse fra CPR-input)
+  const cprInput = document.getElementById('full_cpr');
+  const statusSelect = document.getElementById('child_check_status');
+
+  function parseCPRtoDate(cpr){
+    if(!cpr || cpr.length < 15) return null;
+    if(cpr[2] !== '-' || cpr[5] !== '-' || cpr[10] !== '-') return null;
+    const dd = cpr.slice(0,2), mm = cpr.slice(3,5), yyyy = cpr.slice(6,10);
+    const d = Number(dd), m = Number(mm)-1, y = Number(yyyy);
+    const dt = new Date(y, m, d);
+    if(dt.getFullYear() !== y || dt.getMonth() !== m || dt.getDate() !== d) return null;
+    return dt;
+  }
+  function yearsBetween(birth, today){
+    let years = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) years--;
+    return years;
+  }
+  function updateChildStatusLock(){
+    const birth = parseCPRtoDate((cprInput.value||'').trim());
+    if(!birth){ statusSelect.disabled = false; return; }
+    const age = yearsBetween(birth, new Date());
+    if(age < 18){
+      statusSelect.value = 'Undtaget';
+      statusSelect.disabled = true;
+    }else{
+      if(statusSelect.disabled){
+        statusSelect.disabled = false;
+        if(!statusSelect.value) statusSelect.value = 'Ikke indhentet';
+      }
+    }
+  }
+  if(cprInput && statusSelect){
+    cprInput.addEventListener('input', updateChildStatusLock);
+    updateChildStatusLock();
+  }
+
+  // 2) Digital Post: gør note påkrævet når "Fritaget" er valgt
+  const chk = document.getElementById('digital_post_exempt');
+  const note = document.getElementById('digital_post_note');
+  function syncDigitalPostRequired(){
+    if(!chk || !note) return;
+    if(chk.checked){
+      note.setAttribute('required','required');
+      note.setAttribute('title','Angiv note for fritagelse');
+    }else{
+      note.removeAttribute('required');
+      note.removeAttribute('title');
+    }
+  }
+  if(chk){ chk.addEventListener('change', syncDigitalPostRequired); syncDigitalPostRequired(); }
+})();
+</script>
+{% endblock %}

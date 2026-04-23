@@ -1,0 +1,212 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('dashboard') }}">Dashboard</a> ›
+  <a href="{{ url_for('members_list', status='active') }}">Medlemmer</a> ›
+  <span>Redigér medlem</span>
+</div>
+
+<div class='card' style="max-width:1000px;margin:0 auto">
+  <h2>Redigér medlem</h2>
+
+  <form method='post' autocomplete="off">
+    <div class='form-grid'>
+
+      <!-- Personlige oplysninger -->
+      <div class='field'>
+        <label>Fulde Navn *</label>
+        <input name='full_name' value="{{ member.get('full_name','') }}" autocomplete="name" required>
+      </div>
+
+      <div class='field'>
+        <label>Køn</label>
+        <select name='gender'>
+          {% set g = member.get('gender','Ej angivet') %}
+          <option value="Ej angivet" {{ 'selected' if g=='Ej angivet' else '' }}>Ej angivet</option>
+          <option value="Mand" {{ 'selected' if g=='Mand' else '' }}>Mand</option>
+          <option value="Kvinde" {{ 'selected' if g=='Kvinde' else '' }}>Kvinde</option>
+          <option value="Andet" {{ 'selected' if g=='Andet' else '' }}>Andet</option>
+        </select>
+      </div>
+
+      <div class='field' style="grid-column:1/-1">
+        <label>Fulde CPR nummer (kun hvis det skal ændres)</label>
+        <input id="full_cpr"
+               name="full_cpr"
+               placeholder="dd-mm-yyyy-xxxx"
+               inputmode="numeric"
+               pattern="^\d{2}-\d{2}-\d{4}-\d{4}$"
+               title="Indtast CPR som dd-mm-yyyy-xxxx (fx 08-08-1970-1234)"
+               autocomplete="off">
+        <div class="muted" style="font-size:12px">
+          Nuværende: {{ cpr_display(member.get('full_cpr_encrypted')) }} (sidste 4 vises ikke her).
+        </div>
+      </div>
+
+      <!-- Kontakt -->
+      <div class='field'>
+        <label>E-mail *</label>
+        <input name='email' type='email' value="{{ member.get('email','') }}" autocomplete="email" maxlength="254" required>
+      </div>
+
+      <div class='field'>
+        <label>Telefon</label>
+        <input name='phone'
+               value="{{ member.get('phone','') }}"
+               inputmode="numeric"
+               pattern="^[0-9]{8}$"
+               title="Indtast 8 cifre (fx 12345678)"
+               autocomplete="tel">
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Adresse</label>
+        <input name='address' value="{{ member.get('address','') }}" autocomplete="street-address">
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Facebook</label>
+        <input name='facebook'
+               value="{{ member.get('facebook','') }}"
+               inputmode="url"
+               pattern="^https?:\/\/(www\.)?facebook\.com\/.+$"
+               title="Indsæt et gyldigt Facebook-link (fx https://www.facebook.com/brugernavn)"
+               placeholder="https://www.facebook.com/brugernavn"
+               autocomplete="url">
+      </div>
+
+      <!-- Digital Post -->
+      <div class='field'>
+        <label>
+          <input type='checkbox' id="digital_post_exempt" name='digital_post_exempt' {{ 'checked' if member.get('digital_post_exempt') else '' }}>
+          Fritaget for Digital Post
+        </label>
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Digital Post – note</label>
+        <textarea id="digital_post_note" name='digital_post_note' rows='3' placeholder='Udfyldes kun hvis fritaget' maxlength="2000">{{ member.get('digital_post_note','') }}</textarea>
+      </div>
+
+      <!-- Medlemskab -->
+      <div class='field'>
+        <label>Dato for optagelse *</label>
+        <input name='join_date'
+               value="{{ member.get('join_date','') }}"
+               placeholder='dd-mm-yyyy'
+               pattern="^\d{2}-\d{2}-\d{4}$"
+               title="Brug format dd-mm-yyyy (fx 05-02-2024)"
+               autocomplete="off"
+               required>
+      </div>
+
+      <div class='field'>
+        <label>Status</label>
+        {% set st = member.get('status','active') %}
+        <select name="status">
+          <option value="active" {{ 'selected' if st=='active' else '' }}>Aktiv</option>
+          <option value="inactive" {{ 'selected' if st=='inactive' else '' }}>Ikke-medlem</option>
+        </select>
+      </div>
+
+      <!-- Børneattest -->
+      <div class='field'>
+        <label>Børneattest godkendt</label>
+        <input name='child_check_approved'
+               value="{{ member.get('child_check_approved','') }}"
+               placeholder='dd-mm-yyyy'
+               pattern="^\d{2}-\d{2}-\d{4}$"
+               title="Brug format dd-mm-yyyy (fx 12-02-2024)"
+               autocomplete="off">
+        <div class="muted" style="font-size:12px">
+          Fornyelsesdato beregnes automatisk til +2 år ved gem.
+        </div>
+      </div>
+
+      <div class='field'>
+        <label>Børneattest status</label>
+        {% set cs = member.get('child_check_status','Ikke indhentet') %}
+        <select id="child_check_status" name='child_check_status'>
+          <option value='Ikke indhentet' {{ 'selected' if cs=='Ikke indhentet' else '' }}>Ikke indhentet</option>
+          <option value='Klar til bestilling' {{ 'selected' if cs=='Klar til bestilling' else '' }}>Klar til bestilling</option>
+          <option value='Er bestilt' {{ 'selected' if cs=='Er bestilt' else '' }}>Er bestilt</option>
+          <option value='Attest indhentet' {{ 'selected' if cs=='Attest indhentet' else '' }}>Attest indhentet</option>
+          <option value='Undtaget' {{ 'selected' if cs=='Undtaget' else '' }}>Undtaget</option>
+        </select>
+        <div class="muted" style="font-size:12px">
+          Hvis du indtaster et nyt CPR med alder < 18, låses status automatisk til “Undtaget”.
+        </div>
+      </div>
+
+      <div class='field' style='grid-column:1/-1'>
+        <label>Note til børneattest</label>
+        <textarea name='child_check_note' rows='3' maxlength="2000">{{ member.get('child_check_note','') }}</textarea>
+      </div>
+
+    </div>
+
+    <div class='actions' style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class='btn primary'>Gem ændringer</button>
+      <a class='btn' href='{{ url_for('members_list', status="active") }}'>Annullér</a>
+    </div>
+  </form>
+</div>
+
+<script>
+(function(){
+  // 1) Hvis der tastes NYT CPR, lås børneattest-status ved <18
+  const cprInput = document.getElementById('full_cpr');
+  const statusSelect = document.getElementById('child_check_status');
+
+  function parseCPRtoDate(cpr){
+    if(!cpr || cpr.length < 15) return null;
+    if(cpr[2] !== '-' || cpr[5] !== '-' || cpr[10] !== '-') return null;
+    const dd = cpr.slice(0,2), mm = cpr.slice(3,5), yyyy = cpr.slice(6,10);
+    const d = Number(dd), m = Number(mm)-1, y = Number(yyyy);
+    const dt = new Date(y, m, d);
+    if(dt.getFullYear() !== y || dt.getMonth() !== m || dt.getDate() !== d) return null;
+    return dt;
+  }
+  function yearsBetween(birth, today){
+    let years = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) years--;
+    return years;
+  }
+  function updateChildStatusLock(){
+    const raw = (cprInput.value||'').trim();
+    if(!raw){ statusSelect.disabled = false; return; } // ingen ændring → ingen lock
+    const birth = parseCPRtoDate(raw);
+    if(!birth){ statusSelect.disabled = false; return; }
+    const age = yearsBetween(birth, new Date());
+    if(age < 18){
+      statusSelect.value = 'Undtaget';
+      statusSelect.disabled = true;
+    }else{
+      if(statusSelect.disabled){
+        statusSelect.disabled = false;
+        if(!statusSelect.value) statusSelect.value = 'Ikke indhentet';
+      }
+    }
+  }
+  if(cprInput && statusSelect){
+    cprInput.addEventListener('input', updateChildStatusLock);
+  }
+
+  // 2) Digital Post: gør note påkrævet når "Fritaget" er valgt
+  const chk = document.getElementById('digital_post_exempt') || document.querySelector("input[name='digital_post_exempt']");
+  const note = document.getElementById('digital_post_note') || document.querySelector("textarea[name='digital_post_note']");
+  function syncDigitalPostRequired(){
+    if(!chk || !note) return;
+    if(chk.checked){
+      note.setAttribute('required','required');
+      note.setAttribute('title','Angiv note for fritagelse');
+    }else{
+      note.removeAttribute('required');
+      note.removeAttribute('title');
+    }
+  }
+  if(chk){ chk.addEventListener('change', syncDigitalPostRequired); syncDigitalPostRequired(); }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="breadcrumbs">
+  <span>Dashboard</span>
+</div>
+
+<!-- Overblik: to kort med knapper til medlemslister -->
+<div class="stats-row">
+  <div class="card stats-card">
+    <div class="muted">Aktive medlemmer</div>
+    <div class="big">{{ total_active }}</div>
+    <div>
+      <a class="btn small" href="{{ url_for('members_list', status='active') }}">Se liste</a>
+    </div>
+  </div>
+
+  <div class="card stats-card">
+    <div class="muted">Tidligere medlemmer</div>
+    <div class="big">{{ total_inactive }}</div>
+    <div>
+      <a class="btn small" href="{{ url_for('members_list', status='inactive') }}">Se liste</a>
+    </div>
+  </div>
+</div>
+
+<!-- Grafer i eget kort -->
+<div class="card charts-container">
+  <h2 class="charts-title">Grafer</h2>
+
+  <div class="charts-tabs" id="chart-tabs">
+    <button class="btn small" data-chart="membership">Medlemsudvikling</button>
+    <button class="btn small" data-chart="age_buckets">Aldersfordeling</button>
+    <button class="btn small" data-chart="age_gender">Alder/Køn</button>
+    <button class="btn small" data-chart="child_vs_adult">Børn vs. Voksne</button>
+  </div>
+
+  <div class="charts-wrapper">
+    <img
+      id="analytics-img"
+      class="chart-canvas"
+      src="{{ chart_urls.membership }}"
+      alt="Graf"
+    />
+  </div>
+</div>
+
+<!-- DATA-HOLDER: Jinja JSON til data-attribute -->
+<div
+  id="chart-root"
+  data-chart-urls='{{ chart_urls | tojson | e }}'
+  style="display:none"></div>
+
+<script>
+(function(){
+  var img  = document.getElementById('analytics-img');
+  var tabs = document.getElementById('chart-tabs');
+  var root = document.getElementById('chart-root');
+  if(!img || !tabs || !root) return;
+
+  var urls = {};
+  try { urls = JSON.parse(root.dataset.chartUrls || '{}'); } catch(e) { urls = {}; }
+
+  function urlForChart(name){
+    var base = urls && urls[name] ? urls[name] : ('/analytics/' + encodeURIComponent(name) + '.png');
+    var ts = Date.now();
+    return base + (base.indexOf('?') >= 0 ? '&' : '?') + 't=' + ts; // cache-bust
+  }
+
+  function setActive(btn){
+    var list = tabs.querySelectorAll('button');
+    for (var i=0;i<list.length;i++){ list[i].classList.remove('primary'); }
+    btn.classList.add('primary');
+  }
+
+  function applySizeClass(name){
+    // Gør cirkeldiagram mindre
+    if(name === 'child_vs_adult'){
+      img.classList.add('pie');
+    }else{
+      img.classList.remove('pie');
+    }
+  }
+
+  tabs.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('button[data-chart]') : null;
+    if(!btn) return;
+    var name = btn.getAttribute('data-chart');
+    img.src = urlForChart(name);
+    applySizeClass(name);
+    setActive(btn);
+  });
+
+  // Init: marker første fane og sæt korrekt størrelse + cache-bustet src
+  var first = tabs.querySelector('button[data-chart]');
+  if(first){
+    first.classList.add('primary');
+    var firstName = first.getAttribute('data-chart');
+    applySizeClass(firstName);
+    img.src = urlForChart(firstName);
+  }
+})();
+</script>
+
+{% endblock %}

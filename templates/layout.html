@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang='da'>
+<head>
+  <meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Troopers for Charity - Medlems Database</title>
+  <link rel='stylesheet' href='{{ url_for('static', filename='TFC_style.css') }}'>
+<style>nav a { font-weight:bold; }</style>
+<style>nav a.active{border-bottom:2px solid currentColor}</style></head>
+<body>
+  <div class='page'><div class='container'>
+    <header>
+      <img src='{{ url_for('static', filename='Pictures/TFClogo.png') }}' alt='Troopers for Charity' class='logo'>
+      <div><h1>Troopers for Charity</h1><div class='subtitle'>Medlems Database</div></div>
+    </header>
+    <nav>
+      <a href='{{ url_for('dashboard') }}'>Dashboard</a>
+      <a href='{{ url_for('members_list') }}'>Medlemmer</a>
+      <a href='{{ url_for('renewals_overview') }}'>Fornyelser</a>
+      {% if session.get('username') %}<a href='{{ url_for('logout') }}'>Log ud ({{ session.get('username') }})</a>{% else %}<a href='{{ url_for('login') }}'>Log ind</a>{% endif %}
+    </nav>
+    {% if request.endpoint != 'login' %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}<div class='flash {{ category }}'>{{ message }}</div>{% endfor %}{% endif %}
+    {% endwith %}{% endif %}
+    {% block content %}{% endblock %}
+  </div>
+  <footer class='footer'><div>© 2025 All rights reserved</div><div>Ved problemer, kontakt da:   <button class='btn small' id='supportBtn'>Support</button></div></footer>
+  <div class='modal-backdrop' id='supportModal'><div class='modal'>
+    <header style='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'><h3 style='margin:0'>Support</h3><button class='close' id='supportClose' aria-label='Luk'>&times;</button></header>
+    <form id='supportForm'><div class='form-grid'>
+      <div class='field'><label>Emne</label><input name='subject' value='Supportanmodning: TFC Medlems DB'></div>
+      <div class='field'><label>Navn</label><input name='name' placeholder='Dit navn'></div>
+      <div class='field'><label>Besked</label><textarea name='message' rows='6' placeholder='Beskriv dit problem...'></textarea></div>
+    </div><div class='actions' style='display:flex;gap:8px;justify-content:flex-end'><button class='btn' type='button' id='supportCancel'>Annullér</button><button class='btn primary' type='submit'>Send</button></div></form>
+  </div></div></div>
+  <script>
+  (function(){const o=document.getElementById('supportBtn'),m=document.getElementById('supportModal'),c=document.getElementById('supportClose'),x=document.getElementById('supportCancel'),f=document.getElementById('supportForm');
+  function open(){m.style.display='flex'} function close(){m.style.display='none'}
+  if(o)o.addEventListener('click',open); if(c)c.addEventListener('click',close); if(x)x.addEventListener('click',close);
+  if(f){f.addEventListener('submit',function(e){e.preventDefault();const d=new FormData(f);const s=encodeURIComponent(d.get('subject')||'Support');const n=d.get('name')||'';const msg=d.get('message')||'';const b=encodeURIComponent((n?('Navn: '+n+'\n\n'):'')+msg);window.location.href='mailto:kasperjensen1987@gmail.com?subject='+s+'&body='+b;close();});}})();
+  </script>
+</body></html>
