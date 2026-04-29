@@ -3,34 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasper Groth Jensen - CV</title>
+    <title>{{ profile.name }} - CV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
         :root {
-            /* Ret disse HEX-koder så de matcher præcis de farver, du bruger i dit Word-dokument */
-            --primary-color: #2c3e50; /* Mørk farve til overskrifter */
-            --sidebar-bg: #f8f9fa;    /* Baggrundsfarve til venstre kolonne */
+            --primary-color: #2c3e50; 
+            --sidebar-bg: #f8f9fa;    
             --text-color: #333333;
-            --accent-color: #00897B;  /* Farve til links og knapper */
+            --accent-color: #0056b3;  
         }
 
         body {
-            background-color: #e9ecef; /* Grå baggrund udenom selve CV'et */
+            background-color: #e9ecef; 
             font-family: Arial, sans-serif;
             color: var(--text-color);
+            margin: 0;
+            padding: 0;
         }
 
         .cv-document {
             max-width: 1000px;
+            height: calc(100vh - 80px);
             margin: 40px auto;
             background-color: #ffffff;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             display: flex;
-            min-height: 100vh;
+            overflow: hidden; 
         }
 
-        /* --- VENSTRE KOLONNE --- */
         .sidebar {
             width: 35%;
             background-color: var(--sidebar-bg);
@@ -45,9 +46,8 @@
         }
 
         .profile-img {
-            width: 150px; /* Fast definition af størrelse */
+            width: 150px; 
             height: 150px;
-            max-width: 100%;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid white;
@@ -56,9 +56,7 @@
             margin: 0 auto;
         }
 
-        .sidebar-section {
-            margin-bottom: 35px;
-        }
+        .sidebar-section { margin-bottom: 35px; }
 
         .sidebar-title {
             color: var(--primary-color);
@@ -70,16 +68,8 @@
             text-transform: uppercase;
         }
 
-        .sidebar-list {
-            list-style-type: none;
-            padding-left: 0;
-            margin: 0;
-        }
-
-        .sidebar-list li {
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
+        .sidebar-list { list-style-type: none; padding-left: 0; margin: 0; }
+        .sidebar-list li { margin-bottom: 8px; font-size: 0.95rem; }
 
         .contact-item {
             display: flex;
@@ -88,47 +78,61 @@
             font-size: 0.95rem;
             word-break: break-word;
         }
+        .contact-item i { margin-right: 10px; color: var(--primary-color); font-size: 1.1rem; }
 
-        .contact-item i {
-            margin-right: 10px;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-
-        .reference-quote {
-            font-style: italic;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--primary-color);
-            padding-left: 10px;
-        }
-
-        /* --- HØJRE KOLONNE --- */
         .main-content {
             width: 65%;
-            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .name-header {
+        .fixed-right-header {
+            padding: 50px 40px 0 40px;
+            flex-shrink: 0;
+            background-color: #ffffff;
+            z-index: 10;
+        }
+
+        .name-header { color: var(--primary-color); font-size: 2.8rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; }
+        .title-header { color: var(--text-color); font-size: 1.2rem; font-weight: bold; margin-bottom: 30px; }
+        .intro-text { font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
+
+        .cv-menu {
+            border-top: 1px solid #e1e1e1;
+            border-bottom: 1px solid #e1e1e1;
+            padding: 12px 0;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cv-menu a {
             color: var(--primary-color);
-            font-size: 2.8rem;
+            text-decoration: none;
             font-weight: bold;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
         }
 
-        .title-header {
-            color: var(--text-color);
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 30px;
+        .cv-menu a:hover { color: var(--accent-color); }
+        .cv-menu a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
+
+        .scrollable-content { padding: 20px 40px 50px 40px; overflow-y: auto; flex-grow: 1; }
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active-tab { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .intro-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
+        .scrollable-content::-webkit-scrollbar { width: 5px; }
+        .scrollable-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; }
 
         .main-section-title {
             color: var(--primary-color);
@@ -140,24 +144,9 @@
             text-transform: uppercase;
         }
 
-        /* --- KODE & PROJEKTER --- */
-        .project-card {
-            border: 1px solid #e1e1e1;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-color: #fafafa;
-        }
-
-        pre {
-            background-color: #2b2b2b;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            overflow-x: auto;
-        }
-
+        .project-card { border: 1px solid #e1e1e1; padding: 20px; border-radius: 5px; margin-bottom: 20px; background-color: #fafafa; }
+        pre { background-color: #2b2b2b; color: #f8f8f2; padding: 15px; border-radius: 5px; font-size: 0.85rem; overflow-x: auto; }
+        
         .btn-custom {
             background-color: var(--primary-color);
             color: white;
@@ -168,21 +157,37 @@
             font-weight: bold;
             margin-top: 10px;
         }
+        .btn-custom:hover { background-color: var(--accent-color); color: white; }
 
-        .btn-custom:hover {
-            background-color: var(--accent-color);
-            color: white;
+        .btn-outline-custom {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .btn-outline-custom:hover { background-color: var(--primary-color); color: white; }
+
+        .cv-item { margin-bottom: 25px; }
+        .cv-item-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 4px; }
+        .cv-item-date { font-style: italic; font-size: 0.9rem; color: #666; margin-bottom: 8px; display: block; }
+        
+        .reference-card {
+            border-left: 3px solid var(--primary-color);
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 0 4px 4px 0;
         }
 
-        /* Responsivt layout til mobil */
         @media (max-width: 768px) {
-            .cv-document {
-                flex-direction: column;
-                margin: 0;
-            }
-            .sidebar, .main-content {
-                width: 100%;
-            }
+            .cv-document { flex-direction: column; height: auto; margin: 0; }
+            .sidebar, .main-content { width: 100%; overflow: visible; }
         }
     </style>
 </head>
@@ -190,10 +195,10 @@
 
 <div class="cv-document">
     
+    <!-- VENSTRE KOLONNE -->
     <div class="sidebar">
-        
         <div class="profile-img-container">
-            <img src='{{ url_for('static', filename='Pictures/Kasper_profil.png') }}' alt='Kasper Groth Jensen' class='profile-img'>
+            <img src="{{ url_for('static', filename='Pictures/Kasper_profil.png') }}" alt="{{ profile.name }}" class="profile-img">
         </div>
 
         <div class="sidebar-section">
@@ -208,33 +213,18 @@
         </div>
 
         <div class="sidebar-section">
-            <h3 class="sidebar-title">Stikord om mig</h3>
-            <ul class="sidebar-list">
-                <li>Udpræget brobygger</li>
-                <li>Proaktiv problemløser</li>
-                <li>Virksomhedens "go to person"</li>
-                <li>Vellidt teamplayer</li>
-                <li>Fagligt nysgerrig</li>
-                <li>Struktureret og ansvarsfuld</li>
-                <li>Stolt nørd</li>
-                <li>Praktisk anlagt</li>
-                <li>Altid imødekommende</li>
-            </ul>
-        </div>
-
-        <div class="sidebar-section">
             <h3 class="sidebar-title">Kontaktinformationer</h3>
             <div class="contact-item">
                 <i class="bi bi-geo-alt-fill"></i>
-                <span>Gustav Holms Vej 15<br>9210 Aalborg SØ, Danmark</span>
+                <span>{{ profile.address }}</span>
             </div>
             <div class="contact-item">
                 <i class="bi bi-telephone-fill"></i>
-                <span>+45 54334207</span>
+                <span>{{ profile.phone }}</span>
             </div>
             <div class="contact-item">
                 <i class="bi bi-envelope-fill"></i>
-                <span>kasperjensen1987@gmail.com</span>
+                <span>{{ profile.email }}</span>
             </div>
             <div class="contact-item mt-3">
                 <i class="bi bi-linkedin"></i>
@@ -245,57 +235,123 @@
                 <a href="{{ profile.thingiverse }}" target="_blank" style="color: inherit; text-decoration: none;">Thingiverse (3D Designs)</a>
             </div>
         </div>
-
-        <div class="sidebar-section">
-            <h3 class="sidebar-title">Reference udsnit</h3>
-            <div class="reference-quote">”En organiseret og konstruktiv kollega.”</div>
-            <div class="reference-quote">”Hjælpsom, ansvarsfuld og imødekommende.”</div>
-        </div>
-
     </div>
 
+    <!-- HØJRE KOLONNE -->
     <div class="main-content">
         
-        <h1 class="name-header">{{ profile.name }}</h1>
-        <h2 class="title-header">Digital Specialist & Procesoptimering | Full-stack mindset</h2>
+        <div class="fixed-right-header">
+            <h1 class="name-header">{{ profile.name }}</h1>
+            <h2 class="title-header">{{ profile.title }}</h2>
 
-        <div class="intro-text">
-            {{ profile.intro }}
-        </div>
-
-        <h3 class="main-section-title">Eksamensprojekt & Teknisk Showcase</h3>
-        
-        <div class="project-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <h4 style="font-size: 1.2rem; font-weight: bold;">{{ showcase[0].title }}</h4>
-                <span class="badge bg-dark">Karakter: {{ showcase[0].grade }}</span>
+            <div class="intro-text">
+                {{ profile.intro }}
             </div>
-            <p style="font-weight: bold; margin-bottom: 5px;">Teknologier: {{ showcase[0].tech }}</p>
-            <p>{{ showcase[0].description }}</p>
+
+            <div class="cv-menu">
+                <a href="#" onclick="showTab(event, 'kompetencer')" class="active">Kernekompetencer</a>
+                <a href="#" onclick="showTab(event, 'erfaring')">Erhvervserfaring</a>
+                <a href="#" onclick="showTab(event, 'uddannelse')">Uddannelse og kurser</a>
+                <a href="#" onclick="showTab(event, 'frivilligt')">Frivilligt & Tillidshverv</a>
+                <a href="#" onclick="showTab(event, 'referencer')">Skriftlige Referencer</a>
+            </div>
+        </div>
+
+        <div class="scrollable-content">
             
-            <h5 style="font-size: 1rem; margin-top: 15px;">Kodeeksempel (Service-lag):</h5>
-            <pre><code>{{ showcase[0].code_sample }}</code></pre>
-            
-            <a href="{{ url_for('dashboard') }}" class="btn-custom" target="_blank">Gå til det aktive medlemssystem</a>
-        </div>
+            <section id="kompetencer" class="tab-content active-tab">
+                <h3 class="main-section-title">Tekniske Kernekompetencer</h3>
+                {% for skill in skills %}
+                <div class="cv-item">
+                    <div class="cv-item-title">{{ skill.category }}</div>
+                    <p class="small">{{ skill.description }}</p>
+                </div>
+                {% endfor %}
+            </section>
 
-        <h3 class="main-section-title">Erhvervserfaring</h3>
-        <p><em>(Her kan du indsætte din erfaringstråd fra dit originale CV dokument, f.eks. Scandi Byg, Spæncom, Niras osv.)</em></p>
+            <section id="erfaring" class="tab-content">
+                <h3 class="main-section-title">Erhvervserfaring</h3>
+                {% for item in experience %}
+                <div class="cv-item">
+                    <div class="cv-item-title">{{ item.title }} | {{ item.company }}</div>
+                    <span class="cv-item-date">{{ item.period }}</span>
+                    <p class="small">{{ item.description }}</p>
+                </div>
+                {% endfor %}
+            </section>
 
-        <h3 class="main-section-title">Frivilligt Arbejde & Tillidshverv</h3>
-        <div style="margin-bottom: 20px;">
-            <h4 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 2px;">Bestyrelsesmedlem & Frivillig | Troopers for Charity</h4>
-            <span style="font-style: italic; font-size: 0.9rem;">2022 – Løbende</span>
-            <p style="margin-top: 5px;">Jeg er aktiv i en velgørenhedsforening, der besøger syge og udsatte børn på hospitaler og institutioner iført professionelle Star Wars kostumer...</p>
-        </div>
-        <div>
-            <h4 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 2px;">Lokalt Uddannelsesudvalg | Teknisk Design, Aalborg</h4>
-            <span style="font-style: italic; font-size: 0.9rem;">2024 – 2026</span>
-        </div>
+            <section id="uddannelse" class="tab-content">
+                <h3 class="main-section-title">Uddannelse og kurser</h3>
+                {% for edu in education %}
+                <div class="cv-item">
+                    <div class="cv-item-title">{{ edu.title }}</div>
+                    <span class="cv-item-date">{{ edu.institution }} | {{ edu.period }}</span>
+                    <p class="small">{{ edu.description }}</p>
+                    {% if 'Python' in edu.title %}
+                    <a href="#" onclick="showTab(event, 'projekt')" class="btn-custom">Python Eksamensprojekt: Medlemssystem</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
 
+            <section id="projekt" class="tab-content">
+                <h3 class="main-section-title">Eksamensprojekt: Medlemssystem</h3>
+                <div class="project-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h4 style="font-size: 1.2rem; font-weight: bold;">{{ showcase[0].title }}</h4>
+                        <span class="badge bg-dark">Karakter: {{ showcase[0].grade }}</span>
+                    </div>
+                    <p style="font-weight: bold; margin-bottom: 5px;">Teknologier: {{ showcase[0].tech }}</p>
+                    <p>{{ showcase[0].description }}</p>
+                    <h5 style="font-size: 1rem; margin-top: 15px;">Kodeeksempel (Service-lag):</h5>
+                    <pre><code>{{ showcase[0].code_sample }}</code></pre>
+                    <div class="mt-4">
+                        <a href="{{ url_for('dashboard') }}" class="btn-custom" target="_blank">Gå til det aktive medlemssystem</a>
+                        <a href="#" onclick="showTab(event, 'uddannelse')" class="btn-outline-custom ms-2">Tilbage til Uddannelse</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="frivilligt" class="tab-content">
+                <h3 class="main-section-title">Frivilligt Arbejde & Tillidshverv</h3>
+                {% for vol in volunteer %}
+                <div class="cv-item">
+                    <div class="cv-item-title">{{ vol.title }}</div>
+                    <span class="cv-item-date">{{ vol.period }}</span>
+                    <p class="small">{{ vol.description }}</p>
+                </div>
+                {% endfor %}
+            </section>
+
+            <section id="referencer" class="tab-content">
+                <h3 class="main-section-title">Skriftlige Referencer</h3>
+                {% for ref in references %}
+                <div class="reference-card shadow-sm">
+                    <div class="cv-item-title" style="font-style: italic; font-weight: normal;">{{ ref.quote }}</div>
+                </div>
+                {% endfor %}
+            </section>
+
+        </div>
     </div>
-
 </div>
+
+<script>
+    function showTab(event, tabId) {
+        event.preventDefault(); 
+        let tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => { tab.classList.remove('active-tab'); });
+        document.getElementById(tabId).classList.add('active-tab');
+        let links = document.querySelectorAll('.cv-menu a');
+        links.forEach(link => { link.classList.remove('active'); });
+        if (tabId === 'projekt') {
+            document.querySelector('.cv-menu a[onclick*="uddannelse"]').classList.add('active');
+        } else {
+            let matchingLink = document.querySelector(`.cv-menu a[onclick*="${tabId}"]`);
+            if (matchingLink) { matchingLink.classList.add('active'); }
+        }
+    }
+</script>
 
 </body>
 </html>
