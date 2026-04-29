@@ -7,351 +7,112 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
-        :root {
-            --primary-color: #2c3e50; 
-            --sidebar-bg: #f8f9fa;    
-            --text-color: #333333;
-            --accent-color: #0056b3;  
-        }
-
-        body {
-            background-color: #e9ecef; 
-            font-family: Arial, sans-serif;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
-
-        .cv-document {
-            max-width: 1000px;
-            height: calc(100vh - 80px);
-            margin: 40px auto;
-            background-color: #ffffff;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            display: flex;
-            overflow: hidden; 
-        }
-
-        .sidebar {
-            width: 35%;
-            background-color: var(--sidebar-bg);
-            padding: 40px 30px;
-            border-right: 1px solid #e1e1e1;
-        }
-
-        .profile-img-container {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-img {
-            width: 150px; 
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: block;
-            margin: 0 auto;
-        }
-
+        :root { --primary-color: #2c3e50; --sidebar-bg: #f8f9fa; --text-color: #333333; --accent-color: #0056b3; }
+        body { background-color: #e9ecef; font-family: Arial, sans-serif; color: var(--text-color); margin: 0; padding: 0; }
+        .cv-document { max-width: 1000px; height: calc(100vh - 80px); margin: 40px auto; background-color: #ffffff; box-shadow: 0 0 20px rgba(0,0,0,0.1); display: flex; overflow: hidden; }
+        .sidebar { width: 35%; background-color: var(--sidebar-bg); padding: 40px 30px; border-right: 1px solid #e1e1e1; overflow-y: auto; }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; margin: 0 auto 30px auto; }
         .sidebar-section { margin-bottom: 35px; }
-
-        .sidebar-title {
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .sidebar-list { list-style-type: none; padding-left: 0; margin: 0; }
-        .sidebar-list li { margin-bottom: 8px; font-size: 0.95rem; }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-        .contact-item i { margin-right: 10px; color: var(--primary-color); font-size: 1.1rem; }
-
-        .main-content {
-            width: 65%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .fixed-right-header {
-            padding: 50px 40px 0 40px;
-            flex-shrink: 0;
-            background-color: #ffffff;
-            z-index: 10;
-        }
-
-        .name-header { color: var(--primary-color); font-size: 2.8rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; }
-        .title-header { color: var(--text-color); font-size: 1.2rem; font-weight: bold; margin-bottom: 30px; }
-        .intro-text { font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
-
-        .cv-menu {
-            border-top: 1px solid #e1e1e1;
-            border-bottom: 1px solid #e1e1e1;
-            padding: 12px 0;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .cv-menu a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            padding-bottom: 4px;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .cv-menu a:hover { color: var(--accent-color); }
+        .sidebar-title { color: var(--primary-color); font-size: 1.1rem; font-weight: bold; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px; text-transform: uppercase; }
+        .sidebar-list { list-style-type: none; padding-left: 0; margin: 0; font-size: 0.9rem; }
+        .sidebar-list li { margin-bottom: 6px; }
+        .contact-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+        .contact-item i { margin-right: 10px; color: var(--primary-color); }
+        .main-content { width: 65%; display: flex; flex-direction: column; overflow: hidden; }
+        .fixed-right-header { padding: 40px 40px 0 40px; flex-shrink: 0; background-color: #ffffff; }
+        .name-header { color: var(--primary-color); font-size: 2.5rem; font-weight: bold; margin-bottom: 5px; }
+        .title-header { color: var(--text-color); font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
+        .intro-text { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        .cv-menu { border-top: 1px solid #e1e1e1; border-bottom: 1px solid #e1e1e1; padding: 10px 0; margin-bottom: 15px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .cv-menu a { color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid transparent; }
         .cv-menu a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
-
-        .scrollable-content { padding: 20px 40px 50px 40px; overflow-y: auto; flex-grow: 1; }
+        .scrollable-content { padding: 10px 40px 40px 40px; overflow-y: auto; flex-grow: 1; }
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active-tab { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .scrollable-content::-webkit-scrollbar { width: 5px; }
-        .scrollable-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; }
-
-        .main-section-title {
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .project-card { border: 1px solid #e1e1e1; padding: 20px; border-radius: 5px; margin-bottom: 20px; background-color: #fafafa; }
-        pre { background-color: #2b2b2b; color: #f8f8f2; padding: 15px; border-radius: 5px; font-size: 0.85rem; overflow-x: auto; }
-        
-        .btn-custom {
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            display: inline-block;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .btn-custom:hover { background-color: var(--accent-color); color: white; }
-
-        .btn-outline-custom {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 4px;
-            display: inline-block;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: all 0.2s;
-        }
-        .btn-outline-custom:hover { background-color: var(--primary-color); color: white; }
-
-        .cv-item { margin-bottom: 25px; }
-        .cv-item-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 4px; }
-        .cv-item-date { font-style: italic; font-size: 0.9rem; color: #666; margin-bottom: 8px; display: block; }
-        
-        .reference-card {
-            border-left: 3px solid var(--primary-color);
-            padding: 15px 20px;
-            background-color: #f8f9fa;
-            margin-bottom: 15px;
-            border-radius: 0 4px 4px 0;
-        }
-
-        @media (max-width: 768px) {
-            .cv-document { flex-direction: column; height: auto; margin: 0; }
-            .sidebar, .main-content { width: 100%; overflow: visible; }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .main-section-title { color: var(--primary-color); font-size: 1.3rem; font-weight: bold; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px; text-transform: uppercase; }
+        .cv-item { margin-bottom: 20px; }
+        .cv-item-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
+        .cv-item-date { font-style: italic; font-size: 0.85rem; color: #666; display: block; margin-bottom: 5px; }
+        .btn-custom { background-color: var(--primary-color); color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; display: inline-block; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+        .reference-card { border-left: 3px solid var(--primary-color); padding: 12px 18px; background-color: #f8f9fa; margin-bottom: 15px; }
+        pre { background-color: #2b2b2b; color: #f8f8f2; padding: 10px; border-radius: 4px; font-size: 0.8rem; margin-top: 10px; }
     </style>
 </head>
 <body>
-
 <div class="cv-document">
-    
-    <!-- VENSTRE KOLONNE -->
     <div class="sidebar">
-        <div class="profile-img-container">
-            <img src="{{ url_for('static', filename='Pictures/Kasper_profil.png') }}" alt="{{ profile.name }}" class="profile-img">
-        </div>
-
+        <img src="{{ url_for('static', filename='Pictures/Kasper_profil.png') }}" alt="{{ profile.name }}" class="profile-img">
         <div class="sidebar-section">
             <h3 class="sidebar-title">Om mig</h3>
-            <ul class="sidebar-list">
-                <li>Født og opvokset i Aalborg</li>
-                <li>Har 2 teenagebørn (en af hver)</li>
-                <li>Bor med min kæreste, Juline</li>
-                <li>Elsker en god intellektuel udfordring</li>
-                <li>Har altid ”ja-hatten” på</li>
-            </ul>
+            <ul class="sidebar-list">{% for p in about %}<li>{{ p.point }}</li>{% endfor %}</ul>
         </div>
-
         <div class="sidebar-section">
-            <h3 class="sidebar-title">Kontaktinformationer</h3>
-            <div class="contact-item">
-                <i class="bi bi-geo-alt-fill"></i>
-                <span>{{ profile.address }}</span>
-            </div>
-            <div class="contact-item">
-                <i class="bi bi-telephone-fill"></i>
-                <span>{{ profile.phone }}</span>
-            </div>
-            <div class="contact-item">
-                <i class="bi bi-envelope-fill"></i>
-                <span>{{ profile.email }}</span>
-            </div>
-            <div class="contact-item mt-3">
-                <i class="bi bi-linkedin"></i>
-                <a href="{{ profile.linkedin }}" target="_blank" style="color: inherit; text-decoration: none;">LinkedIn Profil</a>
-            </div>
-            <div class="contact-item mt-2">
-                <i class="bi bi-box"></i>
-                <a href="{{ profile.thingiverse }}" target="_blank" style="color: inherit; text-decoration: none;">Thingiverse (3D Designs)</a>
-            </div>
+            <h3 class="sidebar-title">Stikord</h3>
+            <ul class="sidebar-list">{% for k in keywords %}<li>{{ k.keyword }}</li>{% endfor %}</ul>
+        </div>
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Kontakt</h3>
+            <div class="contact-item"><i class="bi bi-geo-alt"></i><span>{{ profile.address }}</span></div>
+            <div class="contact-item"><i class="bi bi-telephone"></i><span>{{ profile.phone }}</span></div>
+            <div class="contact-item"><i class="bi bi-envelope"></i><span>{{ profile.email }}</span></div>
+        </div>
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">Sprog & Info</h3>
+            <div class="small">{% for l in languages %}<strong>{{ l.language }}:</strong> {{ l.level }}<br>{% endfor %}</div>
+            <div class="small mt-2"><strong>Kørekort:</strong> {{ metadata.Kørekort }}</div>
         </div>
     </div>
-
-    <!-- HØJRE KOLONNE -->
     <div class="main-content">
-        
         <div class="fixed-right-header">
             <h1 class="name-header">{{ profile.name }}</h1>
             <h2 class="title-header">{{ profile.title }}</h2>
-
-            <div class="intro-text">
-                {{ profile.intro }}
-            </div>
-
+            <div class="intro-text">{{ profile.intro }}</div>
             <div class="cv-menu">
-                <a href="#" onclick="showTab(event, 'kompetencer')" class="active">Kernekompetencer</a>
-                <a href="#" onclick="showTab(event, 'erfaring')">Erhvervserfaring</a>
-                <a href="#" onclick="showTab(event, 'uddannelse')">Uddannelse og kurser</a>
-                <a href="#" onclick="showTab(event, 'frivilligt')">Frivilligt & Tillidshverv</a>
-                <a href="#" onclick="showTab(event, 'referencer')">Skriftlige Referencer</a>
+                <a href="#" onclick="showTab(event, 'kompetencer')" class="active">Kompetencer</a>
+                <a href="#" onclick="showTab(event, 'erfaring')">Erfaring</a>
+                <a href="#" onclick="showTab(event, 'uddannelse')">Uddannelse</a>
+                <a href="#" onclick="showTab(event, 'frivilligt')">Frivilligt</a>
+                <a href="#" onclick="showTab(event, 'referencer')">Referencer</a>
             </div>
         </div>
-
         <div class="scrollable-content">
-            
             <section id="kompetencer" class="tab-content active-tab">
-                <h3 class="main-section-title">Tekniske Kernekompetencer</h3>
-                {% for skill in skills %}
-                <div class="cv-item">
-                    <div class="cv-item-title">{{ skill.category }}</div>
-                    <p class="small">{{ skill.description }}</p>
-                </div>
-                {% endfor %}
+                <h3 class="main-section-title">Kernekompetencer</h3>
+                {% for s in skills %}<div class="cv-item"><div class="cv-item-title">{{ s.category }}</div><p class="small">{{ s.description }}</p></div>{% endfor %}
             </section>
-
             <section id="erfaring" class="tab-content">
                 <h3 class="main-section-title">Erhvervserfaring</h3>
-                {% for item in experience %}
-                <div class="cv-item">
-                    <div class="cv-item-title">{{ item.title }} | {{ item.company }}</div>
-                    <span class="cv-item-date">{{ item.period }}</span>
-                    <p class="small">{{ item.description }}</p>
-                </div>
-                {% endfor %}
+                {% for e in experience %}<div class="cv-item"><div class="cv-item-title">{{ e.title }} | {{ e.company }}</div><span class="cv-item-date">{{ e.period }}</span><p class="small">{{ e.description }}</p></div>{% endfor %}
             </section>
-
             <section id="uddannelse" class="tab-content">
-                <h3 class="main-section-title">Uddannelse og kurser</h3>
-                {% for edu in education %}
-                <div class="cv-item">
-                    <div class="cv-item-title">{{ edu.title }}</div>
-                    <span class="cv-item-date">{{ edu.institution }} | {{ edu.period }}</span>
-                    <p class="small">{{ edu.description }}</p>
-                    {% if 'Python' in edu.title %}
-                    <a href="#" onclick="showTab(event, 'projekt')" class="btn-custom">Python Eksamensprojekt: Medlemssystem</a>
-                    {% endif %}
-                </div>
-                {% endfor %}
+                <h3 class="main-section-title">Uddannelse & Kurser</h3>
+                {% for u in education %}<div class="cv-item"><div class="cv-item-title">{{ u.title }}</div><span class="cv-item-date">{{ u.institution }} | {{ u.period }}</span><p class="small">{{ u.description }}</p>{% if 'Python' in u.title %}<a href="#" onclick="showTab(event, 'projekt')" class="btn-custom">Se Eksamensprojekt</a>{% endif %}</div>{% endfor %}
             </section>
-
             <section id="projekt" class="tab-content">
-                <h3 class="main-section-title">Eksamensprojekt: Medlemssystem</h3>
-                <div class="project-card">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h4 style="font-size: 1.2rem; font-weight: bold;">{{ showcase[0].title }}</h4>
-                        <span class="badge bg-dark">Karakter: {{ showcase[0].grade }}</span>
-                    </div>
-                    <p style="font-weight: bold; margin-bottom: 5px;">Teknologier: {{ showcase[0].tech }}</p>
-                    <p>{{ showcase[0].description }}</p>
-                    <h5 style="font-size: 1rem; margin-top: 15px;">Kodeeksempel (Service-lag):</h5>
-                    <pre><code>{{ showcase[0].code_sample }}</code></pre>
-                    <div class="mt-4">
-                        <a href="{{ url_for('dashboard') }}" class="btn-custom" target="_blank">Gå til det aktive medlemssystem</a>
-                        <a href="#" onclick="showTab(event, 'uddannelse')" class="btn-outline-custom ms-2">Tilbage til Uddannelse</a>
-                    </div>
-                </div>
+                <h3 class="main-section-title">{{ showcase[0].title }}</h3>
+                <div class="reference-card"><h5>Karakter: {{ showcase[0].grade }}</h5><p><strong>Teknologi:</strong> {{ showcase[0].tech }}</p><p>{{ showcase[0].description }}</p><pre><code>{{ showcase[0].code_sample }}</code></pre><a href="/eksamen/" class="btn-custom" target="_blank">Gå til det aktive medlemssystem</a></div>
             </section>
-
             <section id="frivilligt" class="tab-content">
-                <h3 class="main-section-title">Frivilligt Arbejde & Tillidshverv</h3>
-                {% for vol in volunteer %}
-                <div class="cv-item">
-                    <div class="cv-item-title">{{ vol.title }}</div>
-                    <span class="cv-item-date">{{ vol.period }}</span>
-                    <p class="small">{{ vol.description }}</p>
-                </div>
-                {% endfor %}
+                <h3 class="main-section-title">Frivilligt & Tillidshverv</h3>
+                {% for v in volunteer %}<div class="cv-item"><div class="cv-item-title">{{ v.title }} | {{ v.company }}</div><span class="cv-item-date">{{ v.period }}</span><p class="small">{{ v.description }}</p></div>{% endfor %}
             </section>
-
             <section id="referencer" class="tab-content">
-                <h3 class="main-section-title">Skriftlige Referencer</h3>
-                {% for ref in references %}
-                <div class="reference-card shadow-sm">
-                    <div class="cv-item-title" style="font-style: italic; font-weight: normal;">{{ ref.quote }}</div>
-                </div>
-                {% endfor %}
+                <h3 class="main-section-title">Referencer</h3>
+                {% for r in references %}<div class="reference-card"><div class="cv-item-title" style="font-style: italic;">{{ r.quote }}</div></div>{% endfor %}
             </section>
-
         </div>
     </div>
 </div>
-
 <script>
     function showTab(event, tabId) {
-        event.preventDefault(); 
-        let tabs = document.querySelectorAll('.tab-content');
-        tabs.forEach(tab => { tab.classList.remove('active-tab'); });
+        event.preventDefault();
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
         document.getElementById(tabId).classList.add('active-tab');
-        let links = document.querySelectorAll('.cv-menu a');
-        links.forEach(link => { link.classList.remove('active'); });
-        if (tabId === 'projekt') {
-            document.querySelector('.cv-menu a[onclick*="uddannelse"]').classList.add('active');
-        } else {
-            let matchingLink = document.querySelector(`.cv-menu a[onclick*="${tabId}"]`);
-            if (matchingLink) { matchingLink.classList.add('active'); }
-        }
+        document.querySelectorAll('.cv-menu a').forEach(a => a.classList.remove('active'));
+        if (tabId === 'projekt') { document.querySelector('.cv-menu a[onclick*="uddannelse"]').classList.add('active'); }
+        else { event.currentTarget.classList.add('active'); }
     }
 </script>
-
 </body>
 </html>
