@@ -6,3 +6,4 @@ AI_CONTEXT.md
 
 # Ignorer VS Code indstillinger
 .vscode/
+*.pyc
