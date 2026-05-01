@@ -12,16 +12,6 @@ def index():
     showcase = cv_service.get_showcase()
     return render_template(
         'cv.html', 
-        profile=cv_data['profile'],
-        about=cv_data['about'],
-        languages=cv_data['languages'],
-        metadata=cv_data['metadata'],
-        skills=cv_data['skills'],
-        keywords=cv_data['keywords'],
-        experience=cv_data['experience'],
-        education=cv_data['education'],
-        volunteer=cv_data['volunteer'],
-        grouped_references=cv_data['grouped_references'],
-        references_summary=cv_data['references_summary'],
-        showcase=showcase
+        showcase=showcase,
+        **cv_data
     )

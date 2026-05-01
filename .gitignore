@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+# Ignorer AI_CONTEXT.md
+AI_CONTEXT.md
+
+# Ignorer VS Code indstillinger
+.vscode/

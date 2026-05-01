@@ -6,38 +6,7 @@
     <title>{{ profile.name }} - CV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        :root { --primary-color: #2c3e50; --sidebar-bg: #f8f9fa; --text-color: #333333; --accent-color: #0056b3; }
-        body { background-color: #e9ecef; font-family: Arial, sans-serif; color: var(--text-color); margin: 0; padding: 0; }
-        .cv-document { max-width: 1000px; height: calc(100vh - 80px); margin: 40px auto; background-color: #ffffff; box-shadow: 0 0 20px rgba(0,0,0,0.1); display: flex; overflow: hidden; }
-        .sidebar { width: 35%; background-color: var(--sidebar-bg); padding: 40px 30px; border-right: 1px solid #e1e1e1; overflow-y: auto; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: block; margin: 0 auto 30px auto; }
-        .sidebar-section { margin-bottom: 35px; }
-        .sidebar-title { color: var(--primary-color); font-size: 1.1rem; font-weight: bold; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px; text-transform: uppercase; }
-        .sidebar-list { list-style-type: none; padding-left: 0; margin: 0; font-size: 0.9rem; }
-        .sidebar-list li { margin-bottom: 6px; }
-        .contact-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
-        .contact-item i { margin-right: 10px; color: var(--primary-color); }
-        .main-content { width: 65%; display: flex; flex-direction: column; overflow: hidden; }
-        .fixed-right-header { padding: 40px 40px 0 40px; flex-shrink: 0; background-color: #ffffff; }
-        .name-header { color: var(--primary-color); font-size: 2.5rem; font-weight: bold; margin-bottom: 5px; }
-        .title-header { color: var(--text-color); font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; }
-        .intro-text { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
-        .cv-menu { border-top: 1px solid #e1e1e1; border-bottom: 1px solid #e1e1e1; padding: 10px 0; margin-bottom: 15px; display: flex; gap: 12px; flex-wrap: wrap; }
-        .cv-menu a { color: var(--primary-color); text-decoration: none; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid transparent; }
-        .cv-menu a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
-        .scrollable-content { padding: 10px 40px 40px 40px; overflow-y: auto; flex-grow: 1; }
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active-tab { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .main-section-title { color: var(--primary-color); font-size: 1.3rem; font-weight: bold; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; margin-bottom: 15px; text-transform: uppercase; }
-        .cv-item { margin-bottom: 20px; }
-        .cv-item-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
-        .cv-item-date { font-style: italic; font-size: 0.85rem; color: #666; display: block; margin-bottom: 5px; }
-        .btn-custom { background-color: var(--primary-color); color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; display: inline-block; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
-        .reference-card { border-left: 3px solid var(--primary-color); padding: 12px 18px; background-color: #f8f9fa; margin-bottom: 15px; }
-        pre { background-color: #2b2b2b; color: #f8f8f2; padding: 10px; border-radius: 4px; font-size: 0.8rem; margin-top: 10px; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cv_style.css') }}">
 </head>
 <body>
 <div class="cv-document">
@@ -56,6 +25,8 @@
             <div class="contact-item"><i class="bi bi-geo-alt"></i><span>{{ profile.address }}</span></div>
             <div class="contact-item"><i class="bi bi-telephone"></i><span>{{ profile.phone }}</span></div>
             <div class="contact-item"><i class="bi bi-envelope"></i><span>{{ profile.email }}</span></div>
+            <div class="contact-item"><i class="bi bi-linkedin"></i><a href="{{ profile.linkedin }}" target="_blank">LinkedIn Profil</a></div>
+            <div class="contact-item"><i class="bi bi-box"></i><a href="{{ profile.thingiverse }}" target="_blank">Thingiverse Designs</a></div>
         </div>
         <div class="sidebar-section">
             <h3 class="sidebar-title">Sprog & Info</h3>
@@ -99,7 +70,17 @@
             </section>
             <section id="referencer" class="tab-content">
                 <h3 class="main-section-title">Referencer</h3>
-                {% for r in references %}<div class="reference-card"><div class="cv-item-title" style="font-style: italic;">{{ r.quote }}</div></div>{% endfor %}
+                {% for company, items in references_by_company.items() %}
+                    <div class="reference-group-title">{{ company }}</div>
+                    {% for r in items %}
+                        <div class="reference-card">
+                            <div class="cv-item-title">{{ r.person }}</div>
+                            <div class="cv-item-date">{{ r.title }}</div>
+                            <div class="reference-text">"{{ r.quote }}"</div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                <p class="mt-4 small"><em>Flere udtalelser findes på min LinkedIn under anbefalinger: <a href="https://www.linkedin.com/in/kaspergrothjensen/details/recommendations/" target="_blank">LinkedIn Profil</a></em></p>
             </section>
         </div>
     </div>
