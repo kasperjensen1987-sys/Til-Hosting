@@ -21,6 +21,7 @@ def index():
         experience=cv_data['experience'],
         education=cv_data['education'],
         volunteer=cv_data['volunteer'],
-        references=cv_data['references'],
+        grouped_references=cv_data['grouped_references'],
+        references_summary=cv_data['references_summary'],
         showcase=showcase
     )
